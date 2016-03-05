@@ -1,4 +1,4 @@
-kkkkkmimport pygame, random, sys, time
+import pygame, random, sys, time
 from pygame.locals import *
 
 print('INSTRUCCIONES')
