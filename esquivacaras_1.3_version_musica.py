@@ -90,13 +90,13 @@ def playerHasHitBaddie(playerRect, baddies):
 def playerHasHitCherry(playerRect, cherry):
     for c in cherry:
         if playerRect.colliderect(c['rect']):
-            return c
+            return True
     return False
 
-def playerHasHitPocion(playerRect, pocionSize):
+def playerHasHitPocion(playerRect, pocion):
     for p in pocion:
         if playerRect.colliderect(p['rect']):
-            return p
+            return True
     return False
 
 def drawText(text, font, surface, x, y):
