@@ -23,8 +23,8 @@ salida_pocion = 500
 velocidad_maxima_baddie = 2
 velocidad_minima_baddie = 1
 
-WINDOWWIDTH = 1250
-WINDOWHEIGHT = 750
+WINDOWWIDTH = 600
+WINDOWHEIGHT = 600
 
 TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (0, 0, 0)
@@ -90,13 +90,13 @@ def playerHasHitBaddie(playerRect, baddies):
 def playerHasHitCherry(playerRect, cherry):
     for c in cherry:
         if playerRect.colliderect(c['rect']):
-            return True
+            return c
     return False
 
 def playerHasHitPocion(playerRect, pocion):
     for p in pocion:
         if playerRect.colliderect(p['rect']):
-            return True
+            return p
     return False
 
 def drawText(text, font, surface, x, y):
@@ -173,6 +173,22 @@ while True:
     while True: # the game loop runs while the game part is playing
         score += 1 # increase score
 
+        if nivel == 3 and score == 0:
+            for b in baddies:
+                baddies.remove(b)
+            for c in cherry:
+                cherry.remove(c)
+            for p in pocion:
+                pocion.remove(p)
+
+        if nivel == 2 and score == 0:
+            for b in baddies:
+                baddies.remove(b)
+            for c in cherry:
+                cherry.remove(c)
+            for p in pocion:
+                pocion.remove(p)
+
         if nivel == 1:
             salida_baddie = 20
             salida_cherry = 25
@@ -182,6 +198,8 @@ while True:
             nivel2 = False
             nivel3 = False
 
+            
+
         if nivel == 2 and nivel2 == False:
             salida_baddie = 15
             salida_cherry = 20
@@ -190,7 +208,6 @@ while True:
             velocidad_minima_baddie = 2
             nivel2 = True
             nivel3 = False
-            
 
         if nivel == 3 and nivel3 == False:
             salida_baddie = 10
@@ -235,6 +252,8 @@ while True:
 
 
             if event.type == KEYDOWN:
+                if event.key == ord('p'):
+                    score += 1000
                 if event.key == ord('b'):
                     for b in baddies:
                         baddies.remove(b)
@@ -323,6 +342,7 @@ while True:
         # Move the player around.
         if moveLeft and playerRect.left > 0:
             playerRect.move_ip(-1 * PLAYERMOVERATE, 0)
+       
         if moveRight and playerRect.right < WINDOWWIDTH:
             playerRect.move_ip(PLAYERMOVERATE, 0)
         if moveUp and playerRect.top > 0:
@@ -378,7 +398,7 @@ while True:
         windowSurface.fill(BACKGROUNDCOLOR)
 
         # Draw the score and top score.
-        drawText('Puntuación: %s' % (score), font, windowSurface, 10, 0)
+        drawText('Puntuacion: %s' % (score), font, windowSurface, 10, 0)
         drawText('Record: %s' % (topScore), font, windowSurface, 10, 40)
         drawText('Cerezas: %s' % (cherries), font, windowSurface, 10, 80)
         drawText('Nivel: %s' % (nivel), font, windowSurface, 10, 120)
@@ -421,6 +441,7 @@ while True:
             cherries = cherries + 1
             PLAYERMOVERATE = PLAYERMOVERATE - 0.15
             score = score + 100
+            print(cereza_chocada)
 
         if una_vez == True and cherries > 5 and cherries / 5 == int(cherries / 5):
             BADDIEMINSPEED = BADDIEMINSPEED + 2
@@ -433,12 +454,16 @@ while True:
 
         if nivel == 1:
             if score > 5000 and nivel2 == False:
+                windowSurface.fill(BACKGROUNDCOLOR)
                 drawText('Te has pasado el nivel 1', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
                 drawText('Aprieta una tecla para ir al nivel 2', font, windowSurface, (WINDOWWIDTH / 3) - 80, (WINDOWHEIGHT / 3) + 50)
                 pygame.display.update()
                 waitForPlayerToPressKey()
                 score = 0
-                nivel = 2   
+                nivel = 2  
+                baddies = []
+                cherry = []
+                pocion = []
 
         if nivel == 2:
             if score > 10000 and nivel3 == False:
@@ -448,11 +473,17 @@ while True:
                 waitForPlayerToPressKey()
                 score = 0
                 nivel = 3
+                baddies = []
+                cherry = []
+                pocion = []
 
         if nivel == 3:
             if score > 15000:
                 drawText('Te has pasado el juego', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
                 pygame.display.update()
+                waitForPlayerToPressKey()
+                terminate()
+
 
         mainClock.tick(FPS)
 
